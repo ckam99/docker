@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  # Proxies requests to internal services
+  reverse-proxy:
+    image: nginx:1.17.10
+    container_name: reverse_proxy
+    depends_on:
+      - vuejs
+      - fastapi
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+  # client
+  vuejs:
+    image: vuejs
+    container_name: vuejs
+    build:
+      context: ./vuejs
+    depends_on:
+      - fastapi
+    ports:
+      - 8080:80
+    restart: on-failure
+
+  # client react
+  reactjs:
+    image: reactjs
+    container_name: reactjs
+    build:
+      context: ./reactjs
+    depends_on:
+      - fastapi
+    ports:
+      - 8081:80
+    restart: on-failure
+
+  # api
+  fastapi:
+    image: fastapi
+    container_name: fastapi
+    build:
+      context: ./fastapi
+    ports:
+      - 5001:5001
+    restart: on-failure
+
+  # client 2
+  adminer:
+    image: adminer
+    container_name: adminer
+    build:
+      context: ./adminer
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=http://localhost
+      - REACT_APP_MODE=dev
+      - REACT_APP_DOC_URL=http://localhost/documentation
+    depends_on:
+      - fastapi
+    ports:
+      - 5002:80
+    restart: on-failure
