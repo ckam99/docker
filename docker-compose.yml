@@ -8,6 +8,7 @@ services:
     depends_on:
       - vuejs
       - fastapi
+      - reactjs
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
@@ -48,18 +49,18 @@ services:
     restart: on-failure
 
   # client 2
-  adminer:
-    image: adminer
-    container_name: adminer
-    build:
-      context: ./adminer
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_API_URL=http://localhost
-      - REACT_APP_MODE=dev
-      - REACT_APP_DOC_URL=http://localhost/documentation
-    depends_on:
-      - fastapi
-    ports:
-      - 5002:80
-    restart: on-failure
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   build:
+  #     context: ./adminer
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - REACT_APP_API_URL=http://localhost
+  #     - REACT_APP_MODE=dev
+  #     - REACT_APP_DOC_URL=http://localhost/documentation
+  #   depends_on:
+  #     - fastapi
+  #   ports:
+  #     - 5002:80
+  #   restart: on-failure
